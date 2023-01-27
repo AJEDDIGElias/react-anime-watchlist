@@ -3,53 +3,79 @@ import './Components/style.css'
 import { AnimeList } from "./Components/AnimeList";
 import { AnimeInfo } from "./Components/AnimeInfo";
 import { AddToList } from "./Components/AddToList";
+import { RemoveFromList } from "./Components/RemoveFromList";
 
 function App() {
   
-  const [animeData,setAnimeData]=useState();
   const [search, setSearch]=useState('One Piece');
-  const [animeInfo, setAnimeInfo]=useState();
+  const [animeData,setAnimeData]=useState();
+  const [animeInfo, setAnimeInfo]=useState()
+  const [myWatchList,setMyWatchList]=useState([])
+
+  const addTo=(anime)=>{
+    const index=myWatchList.findIndex((myanime)=>{
+        return myanime.mal_id === anime.mal_id
+    })
+    if(index < 0){
+      const newArray=[...myWatchList,anime]
+      setMyWatchList(newArray);
+    }
+    
+  }
+  const removeFrom=(anime)=>{
+    const newArray=myWatchList.filter((myanime)=>{
+      return myanime.mal_id !== anime.mal_id
+    })
+    setMyWatchList(newArray)
+  }
+
 
   const getData=async()=>{
     const res=await fetch(`https://api.jikan.moe/v4/anime?q=${search}&limit=20`)
     const resData= await res.json();
-    //console.log(res);
-    //console.log(resData);
     setAnimeData(resData.data)
 }
+useEffect(()=>{
+  getData()
+},[search])
 
-  
-  useEffect(()=>{
-    getData()
-  },[search]);
+return (
+  <>
+      <div className="header">
+        <h1>MyAnimeList</h1>
+        <div className="search-box">
+            <input type="search" placeholder="Search your anime" 
+            onChange={(e)=>setSearch(e.target.value)}/>
+        </div>
+      </div>
 
-  return (
-    <>
-    <div className="header">
-      <h1>My Anime WatchList</h1>
-      <div className="search-box">
-        <input type="search" placeholder="Search your anime"
-        onChange={(e)=>setSearch(e.target.value)}/>
+      <div className="container">
+        <div className="animeInfo">
+         {animeInfo && <AnimeInfo animeInfo={animeInfo}/>}
+        </div>
+        <div className="anime-row">
+          <h2 className="text-heading">Anime</h2>
+          <div className="row">
+              <AnimeList 
+              animelist={animeData}
+              setAnimeInfo={setAnimeInfo}
+              animeComponent={AddToList}
+              handleList={(anime)=>addTo(anime)}
+              />
+          </div>
+          <h2 className="text-heading">My List</h2>
+          <div className="row">
+              <AnimeList 
+              animelist={myWatchList}
+              setAnimeInfo={setAnimeInfo}
+              animeComponent={RemoveFromList}
+              handleList={(anime)=>removeFrom(anime)}
+              />
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div className="container">
-      <div className="animeInfo">
-        {animeInfo && <AnimeInfo animeInfo={animeInfo}/>}
-      </div>
-      <div className="anime-row">
-        <h2 className="text-heading">Anime</h2>
-        <div className="row">
-          <AnimeList 
-          animeList={animeData}
-          setAnimeInfo={setAnimeInfo}
-          animeComponent={AddToList}
-          />
-         </div>
-      </div>
-    </div>
-    </>
-  );
+  </>
+);
 }
 
 export default App;

@@ -1,14 +1,14 @@
 import React from 'react'
 
-export const AnimeList = ({animeList, setAnimeInfo, animeComponent, handleList}) => {
+export const AnimeList = ({ animelist,setAnimeInfo,animeComponent,handleList}) => {
   const AddToList=animeComponent;
   return (
     <>
-    {
-        animeList ?(
-            animeList.map((anime,index) => {
-                return(
-                    <div className="card" key={index} onClick={()=>setAnimeInfo(anime)}>
+      {
+        animelist ? (
+          animelist.map((anime, index) => {
+            return (
+              <div className="card" key={index} onClick={()=>setAnimeInfo(anime)}>
                 <img src={anime.images.jpg.large_image_url} alt="animeImage" />
                 <div className="anime-info">
                   <h4>{anime.title}</h4>
@@ -23,11 +23,11 @@ export const AnimeList = ({animeList, setAnimeInfo, animeComponent, handleList})
 
                 </div>
               </div>
-                )
-            })
+            )
+          })
         ) : "Not Found"
-    }
-    
+      }
+
     </>
   )
 }
