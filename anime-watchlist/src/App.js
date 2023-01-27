@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import './Components/style.css'
 import { AnimeList } from "./Components/AnimeList";
 import { AnimeInfo } from "./Components/AnimeInfo";
+import { AddToList } from "./Components/AddToList";
+
 function App() {
   
   const [animeData,setAnimeData]=useState();
@@ -41,6 +43,7 @@ function App() {
           <AnimeList 
           animeList={animeData}
           setAnimeInfo={setAnimeInfo}
+          animeComponent={AddToList}
           />
          </div>
       </div>
